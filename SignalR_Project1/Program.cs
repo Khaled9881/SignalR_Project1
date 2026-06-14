@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using SignalR_Project1.Hubs;
+using SignalR_Project1.Models;
 
 namespace SignalR_Project1
 {
@@ -11,6 +13,7 @@ namespace SignalR_Project1
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
+            builder.Services.AddDbContext<ChatSignalRContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("cs")));
 
             var app = builder.Build();
 
