@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<h1>Chat</h1>
+<input type="text" id="txt" />
+<input type="button" id="send" onclick="send()" value="send" />
+<br />
+<ul id="ls">
+
+</ul>
+
+
+
+
+
+
+@section Scripts {
+	<script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+
+
+	<script>
+
+		let con = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+		let name = prompt("ur name!");
+
+		con.start();
+
+		con.on("newMessage", function(n, m) {
+		let l = `<li>${n} -->  ${m} </li>`
+		$("#ls").append(l);
+		})
+
+
+		function send()
+		{
+			con.invoke("sendMessage", name, $("#txt").val()  )
+		}
+	</script>
+}
