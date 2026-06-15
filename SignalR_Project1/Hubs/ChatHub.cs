@@ -34,5 +34,18 @@ namespace SignalR_Project1.Hubs
 
         }
 
+        public async Task savetogroup(string name, string group)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+
+            await Clients.OthersInGroup(group).SendAsync("welcome", name, group);
+        }
+
+
+        public async Task sendtogroup(string msg, string gp, string name)
+        {
+            await Clients.Group(gp).SendAsync("groupmsg", msg, gp, name);
+        }
+
     }
 }

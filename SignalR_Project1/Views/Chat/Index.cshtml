@@ -9,6 +9,13 @@
 <input type="text" id="txt" />
 <input type="button" id="send" onclick="send()" value="send" />
 <br />
+<input type="text" id="save" />
+<input type="button" id="send" onclick="save()" value="save" />
+<br />
+<input type="button" id="gp" onclick="sendgroup()" value="send to group" />
+
+
+<br />
 <ul id="ls">
 
 </ul>
@@ -27,6 +34,7 @@
 		let con = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
 		let name = prompt("ur name!");
+		let grp = "";
 
 		con.start();
 
@@ -35,10 +43,35 @@
 		$("#ls").append(l);
 		})
 
+		con.on("welcome", function(n, g) {
+			let l = `<li>${n} has joined successfullt group  ${g} </li>`
+			$("#ls").append(l);
+		});
+
+		con.on("groupmsg", function(m, g, n) {
+		let l = `<li class= "texr-danger">${n} from group ${g} has sent this message -->  ${m} </li>`
+		$("#ls").append(l);
+		} )
+
 
 		function send()
 		{
 			con.invoke("sendMessage", name, $("#txt").val()  )
 		}
+
+		function save()
+		{
+			grp = $("#save").val();
+			con.invoke("savetogroup", name, $("#save").val())
+		}
+
+
+
+		function sendgroup()
+		{
+			con.invoke("sendtogroup", $("#txt").val(), grp, name);
+		}
+
+
 	</script>
 }
